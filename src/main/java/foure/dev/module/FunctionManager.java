@@ -3,6 +3,7 @@ package foure.dev.module;
 import foure.dev.module.api.Category;
 import foure.dev.module.api.Function;
 import foure.dev.module.impl.combat.AnchorMacro;
+import foure.dev.module.impl.combat.TotemHit;
 import foure.dev.module.impl.combat.AutoCrystal;
 import foure.dev.module.impl.combat.AutoDoubleHand;
 import foure.dev.module.impl.combat.AutoWeapon;
