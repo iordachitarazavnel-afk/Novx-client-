@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "hysteria",
+  "version": "1.0-SNAPSHOT",
+  "name": "hysteria",
+  "description": "4e Client - A powerful Minecraft utility mod",
+  "authors": [
+    "nnpg",
+    "ky.jar",
+    "XuFluffy",
+    "wisp",
+    "graphics"
+  ],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/hysteria/icon.png",
+  "environment": "client",
+  "accessWidener": "hysteria.accesswidener",
+  "entrypoints": {
+    "main": [
+      "foure.dev.FourEClient"
+    ]
+  },
+  "mixins": [
+    "hysteria.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.18.2",
+    "fabric": "*",
+    "minecraft": "1.21.11"
+  }
+}

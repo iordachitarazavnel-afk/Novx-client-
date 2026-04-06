@@ -1,0 +1,45 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "accessWidener": "hysteria.accesswidener",
+  "package": "foure.dev.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "game.RwMixin",
+    "player.EntityMixin",
+    "player.FireworkRocketEntityMixin",
+    "player.ItemMixin",
+    "player.LivingEntityMixin",
+    "player.MixinClientConnection",
+    "player.PlayerEntityMixin"
+  ],
+  "client": [
+    "accessor.HandledScreenAccessor",
+    "accessor.BossBarHudAccessor",
+    "accessor.MinecraftClientAccessor",
+    "accessor.ClientPlayerInteractionManagerAccessor",
+    "accessor.LivingEntityAccessor",
+    "game.ClientPlayNetworkHandlerMixin",
+    "game.KeyboardMixin",
+    "game.MinecraftClientMixin",
+    "game.MouseScrollMixin",
+    "player.CameraMixin",
+    "player.ClientPlayerInteractionManagerMixin",
+    "player.EntityRendererMixin",
+    "player.GameRendererMixin",
+    "player.InputMixin",
+    "player.KeyboardInputMixin",
+    "player.LivingEntityRendererMixin",
+    "player.MixinClientPlayerEntity",
+    "player.MixinKeyboardInput",
+    "render.InGameHudMixin",
+    "render.MixinWorldRenderer",
+    "render.RenderSystemMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  }
+}
