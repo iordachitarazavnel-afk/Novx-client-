@@ -11,7 +11,7 @@ import foure.dev.module.setting.impl.NumberSetting;
 @ModuleInfo(
    name = "sss",
    category = Category.COMBAT,
-   desc = "sss"
+   desc = "run run run run run run suck run run run run run run run run run run run"
 )
 public class sss extends Function {
    private final BooleanSetting rotate = new BooleanSetting("Rotate", this, true);
