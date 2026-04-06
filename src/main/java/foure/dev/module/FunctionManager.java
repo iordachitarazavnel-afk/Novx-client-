@@ -51,6 +51,7 @@ import foure.dev.module.impl.render.StorageESP;
 import foure.dev.module.impl.render.TargetHUD;
 import foure.dev.module.impl.render.TestModule;
 import foure.dev.module.impl.render.WatermarkModule;
+import foure.dev.module.impl.render.ActivityDebug;
 import foure.dev.module.impl.render.BlockESP;
 import foure.dev.module.impl.render.targetesp.TargetEspModule;
 import foure.dev.module.impl.visual.ChunkFinder;
