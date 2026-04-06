@@ -10,9 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.item.SwordItem;
-import net.minecraft.network.packet.c2s.play.HandSwingC2SPacket;
-import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.util.Hand;
 
 @ModuleInfo(
@@ -43,7 +41,7 @@ public class TotemHit extends Function {
                     if (target instanceof PlayerEntity) {
                         for (int i = 0; i < 9; i++) {
                             ItemStack stack = mc.player.getInventory().getStack(i);
-                            if (stack.getItem() instanceof SwordItem) {
+                            if (stack.isIn(ItemTags.SWORDS)) {
                                 int prevSlot = mc.player.getInventory().selectedSlot;
                                 mc.player.getInventory().selectedSlot = i;
                                 mc.interactionManager.attackEntity(mc.player, target);
