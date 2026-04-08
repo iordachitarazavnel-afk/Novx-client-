@@ -18,7 +18,7 @@ public class FakeScoreboard extends Function {
    public final StringSetting deaths = new StringSetting("Deaths", this, "421");
    public final StringSetting keyAll = new StringSetting("Key All", this, "67m 67s");
    public final StringSetting playtime = new StringSetting("Playtime", this, "22d 9h");
-   public final StringSetting team = new StringSetting("Team", this, "RadiumClient");
+   public final StringSetting team = new StringSetting("Team", this, "novx Team");
    public final BooleanSetting realMoney = new BooleanSetting("Show Real Money", this, false);
    public final BooleanSetting realKey = new BooleanSetting("Show Real KeyAll", this, true);
    public final BooleanSetting hideRegion = new BooleanSetting("Hide the region", this, false);
