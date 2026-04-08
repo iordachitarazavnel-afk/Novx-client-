@@ -16,7 +16,7 @@ import foure.dev.util.others.Friends;
    desc = "Protects your nickname and friends' nicknames from being shown in chat"
 )
 public class NameProtect extends Function {
-   StringSetting nameSetting = new StringSetting("Ник", "efef");
+   StringSetting nameSetting = new StringSetting("Ник", "protected");
    BooleanSetting friendsSetting = new BooleanSetting("Friends", false);
 
    public NameProtect() {
