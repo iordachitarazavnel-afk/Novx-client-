@@ -113,10 +113,10 @@ public class ScoreboardUtils {
       if (matcher.find()) {
          String region = matcher.group(1).trim();
          if (!region.isEmpty()) {
-            return replace ? "4e Client" : region;
+            return replace ? "novx Client" : region;
          }
       }
 
-      return "4e Client";
+      return "novx Client";
    }
 }
