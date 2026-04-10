@@ -1,6 +1,6 @@
 package foure.dev.module.impl.script;
 
-import foure.dev.module.impl.misc.ScriptCompiler.CompileResult;
+import foure.dev.module.impl.script.ScriptCompiler.CompileResult;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
