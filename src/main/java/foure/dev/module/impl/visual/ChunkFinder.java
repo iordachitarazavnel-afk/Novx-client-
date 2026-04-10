@@ -43,7 +43,7 @@ import net.minecraft.world.Heightmap.Type;
 
 @ModuleInfo(
    name = "ChunkFinder",
-   category = Category.RENDER,
+   category = Category.VISUAL,
    desc = "Detects suspicious chunks that might contain bases."
 )
 public class ChunkFinder extends Function {
