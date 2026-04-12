@@ -25,7 +25,7 @@ public class WatermarkModule extends HudModule {
    @Subscribe
    public void onRender(RenderEvent event) {
       Renderer2D r = event.renderer();
-      String text = "4E Client";
+      String text = "Novx Client";
       float fontSize = 12.0F;
       float textW = r.getStringWidth(FontRegistry.INTER_MEDIUM, text, fontSize);
       float paddingX = 16.0F;
@@ -35,12 +35,20 @@ public class WatermarkModule extends HudModule {
       this.setHeight(h);
       float x = this.getX();
       float y = this.getY();
-      int textColor = -1;
-      r.gradient(x, y, w, h, 6.0F, (new Color(90, 20, 140, 200)).getRGB(), (new Color(60, 10, 100, 200)).getRGB(), (new Color(30, 5, 50, 200)).getRGB(), (new Color(70, 15, 120, 200)).getRGB());
-      r.rectOutline(x, y, w, h, 6.0F, (new Color(110, 30, 180, 180)).getRGB(), 1.5F);
-      r.shadow(x, y, w, h, 12.0F, 2.0F, 1.0F, (new Color(90, 20, 140, 100)).getRGB());
+
+      // roșu
+      r.gradient(x, y, w, h, 6.0F,
+         (new Color(160, 10, 10, 200)).getRGB(),
+         (new Color(120, 5,  5,  200)).getRGB(),
+         (new Color(80,  0,  0,  200)).getRGB(),
+         (new Color(140, 8,  8,  200)).getRGB());
+      r.rectOutline(x, y, w, h, 6.0F,
+         (new Color(220, 40, 40, 180)).getRGB(), 1.5F);
+      r.shadow(x, y, w, h, 12.0F, 2.0F, 1.0F,
+         (new Color(200, 20, 20, 100)).getRGB());
+
       float textX = x + (w - textW) / 2.0F;
       float textY = y + h / 2.0F + 3.0F;
-      r.text(FontRegistry.INTER_MEDIUM, textX, textY, fontSize, text, textColor);
+      r.text(FontRegistry.INTER_MEDIUM, textX, textY, fontSize, text, -1);
    }
 }
