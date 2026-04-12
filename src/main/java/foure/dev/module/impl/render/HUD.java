@@ -42,30 +42,9 @@ public class HUD extends Function {
       if ((Boolean)this.arraylist.getValue()) {
          this.renderArrayList(r);
       }
-
       if ((Boolean)this.info.getValue()) {
          this.renderInfo(r);
       }
-
-   }
-
-   private void renderWatermark(Renderer2D r) {
-      String text = "4E Client";
-      float fontSize = 12.0F;
-      float textW = r.getStringWidth(FontRegistry.INTER_MEDIUM, text, fontSize);
-      float paddingX = 16.0F;
-      float w = textW + paddingX;
-      float h = 22.0F;
-      float screenW = (float)mc.getWindow().getScaledWidth();
-      float x = (screenW - w) / 2.0F;
-      float y = 6.0F;
-      r.gradient(x, y, w, h, 6.0F, (new Color(90, 20, 140, 200)).getRGB(), (new Color(60, 10, 100, 200)).getRGB(), (new Color(30, 5, 50, 200)).getRGB(), (new Color(70, 15, 120, 200)).getRGB());
-      r.gradient(x + 1.5F, y + 1.5F, w - 3.0F, h - 3.0F, 5.0F, (new Color(140, 40, 200, 30)).getRGB(), (new Color(90, 20, 140, 30)).getRGB(), (new Color(60, 10, 100, 30)).getRGB(), (new Color(110, 30, 180, 30)).getRGB());
-      r.rectOutline(x, y, w, h, 6.0F, (new Color(110, 30, 180, 180)).getRGB(), 1.5F);
-      r.shadow(x, y, w, h, 12.0F, 2.0F, 1.0F, (new Color(90, 20, 140, 100)).getRGB());
-      float textX = x + (w - textW) / 2.0F;
-      float textY = y + h / 2.0F + 3.0F;
-      r.text(FontRegistry.INTER_MEDIUM, textX, textY, fontSize, text, -1);
    }
 
    private void renderArrayList(Renderer2D r) {
@@ -105,29 +84,47 @@ public class HUD extends Function {
             float textWidth = r.getStringWidth(FontRegistry.INTER_MEDIUM, name, fontSize);
             float width = textWidth + 10.0F;
             float x = screenW - width - 5.0F;
-            float time = (float)(System.currentTimeMillis() % 3000L) / 3000.0F;
-            float hue = (time + (float)i * 0.05F) % 1.0F;
-            Color dynamicColor = Color.getHSBColor(0.7F + hue * 0.2F, 0.7F, 1.0F);
-            int color1 = dynamicColor.getRGB();
-            int color2 = dynamicColor.darker().getRGB();
+
+            // albastru → roșu cycling
+            float time = (float)(System.currentTimeMillis() % 4000L) / 4000.0F;
+            float t = (time + (float)i * 0.06F) % 1.0F;
+            Color color1, color2;
+            if (t < 0.5F) {
+               // albastru → roșu
+               float blend = t * 2.0F;
+               color1 = new Color(
+                  (int)(30  + blend * 225),
+                  (int)(80  - blend * 80),
+                  (int)(255 - blend * 255),
+                  255);
+            } else {
+               // roșu → albastru
+               float blend = (t - 0.5F) * 2.0F;
+               color1 = new Color(
+                  (int)(255 - blend * 225),
+                  (int)(0   + blend * 80),
+                  (int)(0   + blend * 255),
+                  255);
+            }
+            color2 = color1.darker();
+
+            int c1 = color1.getRGB();
+            int c2 = color2.getRGB();
+
             r.blurRegion(x - 2.0F, y, width + 4.0F, itemHeight, 4.0F, 1.0F);
-            r.gradient(x, y, width, itemHeight, 4.0F, (new Color(20, 5, 30, 180)).getRGB(), (new Color(40, 15, 60, 180)).getRGB(), (new Color(40, 15, 60, 180)).getRGB(), (new Color(20, 5, 30, 180)).getRGB());
+            r.gradient(x, y, width, itemHeight, 4.0F,
+               (new Color(10, 5, 20, 180)).getRGB(),
+               (new Color(20, 10, 40, 180)).getRGB(),
+               (new Color(20, 10, 40, 180)).getRGB(),
+               (new Color(10, 5, 20, 180)).getRGB());
             float barW = 2.0F;
-            r.gradient(x + width - barW, y, barW, itemHeight, 0.0F, color1, color1, color2, color2);
-            r.shadow(x + width - barW, y, barW, itemHeight, 8.0F, 3.0F, 1.0F, color1);
+            r.gradient(x + width - barW, y, barW, itemHeight, 0.0F, c1, c1, c2, c2);
+            r.shadow(x + width - barW, y, barW, itemHeight, 8.0F, 3.0F, 1.0F, c1);
             float textY = y + itemHeight / 2.0F + 3.0F;
             r.text(FontRegistry.INTER_MEDIUM, x + 4.5F, textY + 0.5F, fontSize, name, (new Color(0, 0, 0, 150)).getRGB());
             r.text(FontRegistry.INTER_MEDIUM, x + 4.0F, textY, fontSize, name, -1);
             y += itemHeight + gap;
          }
-
       }
    }
-
-   private void renderInfo(Renderer2D r) {
-      float x = 5.0F;
-      float y = (float)(mc.getWindow().getScaledHeight() - 15);
-      String fps = "FPS: " + mc.getCurrentFps();
-      r.text(FontRegistry.INTER_MEDIUM, x, y, 10.0F, fps, -1);
-   }
-}
+   
