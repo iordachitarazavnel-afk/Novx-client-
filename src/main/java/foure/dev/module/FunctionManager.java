@@ -59,7 +59,6 @@ import foure.dev.module.impl.render.BlockESP;
 import foure.dev.module.impl.render.targetesp.TargetEspModule;
 import foure.dev.module.impl.visual.ChunkFinder;
 import foure.dev.module.impl.visual.FullBright;
-import foure.dev.module.impl.script.ScriptEditorModule;
 import foure.dev.ui.clickgui.ClickGuiDashboard;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -70,7 +69,7 @@ public class FunctionManager {
    private final List<Function> modules = new ArrayList();
 
    public FunctionManager() {
-      this.modules.addAll(Arrays.asList(new AutoSprint(), new GuiMove(), new Freecam(), new NoDelay(), new AutoEat(), new AutoFirework(), new AutoJumpReset(), new Blink(), new TargetPearl(), new AnchorMacro(), new AutoCrystal(), new AutoDoubleHand(), new AutoLog(), new AutoWeapon(), new CrystalOptimizer(), new HoverTotem(), new InvTotem(), new Killaura(), new NoInteract(), new PearlThrow(), new PlacementOptimizer(), new PopCounter(), new SafeAnchorMacro(), new TriggerBot(), new AutoFish(), new AutoTool(), new DebugPanelModule(), new FakePlayer(), new NameProtect(), new ClusterESP(), new HitParticles(), new MobESP(), new NameTags(), new PlayerESP(), new RenderTest(), new StorageESP(), new TestModule(), new JumpCircles(), new HUD(), new TargetHUD(), new ChunkFinder(), new FullBright(), new ShulkerVisible(), new TargetEspModule(), new HideScoreboard(), new AutoBoneOrder(), new SilentHome(), new EditHudModule(), new WatermarkModule(), new ClickGuiDashboard(), new ActivityDebug(), new BlockESP(), new AttributeSwapper(), new PrimeChunkFinder(),  new TotemHit(), new GrowthFinder(), new ScriptEditorModule(), new ConfigModule()));
+      this.modules.addAll(Arrays.asList(new AutoSprint(), new GuiMove(), new Freecam(), new NoDelay(), new AutoEat(), new AutoFirework(), new AutoJumpReset(), new Blink(), new TargetPearl(), new AnchorMacro(), new AutoCrystal(), new AutoDoubleHand(), new AutoLog(), new AutoWeapon(), new CrystalOptimizer(), new HoverTotem(), new InvTotem(), new Killaura(), new NoInteract(), new PearlThrow(), new PlacementOptimizer(), new PopCounter(), new SafeAnchorMacro(), new TriggerBot(), new AutoFish(), new AutoTool(), new DebugPanelModule(), new FakePlayer(), new NameProtect(), new ClusterESP(), new HitParticles(), new MobESP(), new NameTags(), new PlayerESP(), new RenderTest(), new StorageESP(), new TestModule(), new JumpCircles(), new HUD(), new TargetHUD(), new ChunkFinder(), new FullBright(), new ShulkerVisible(), new TargetEspModule(), new HideScoreboard(), new AutoBoneOrder(), new SilentHome(), new EditHudModule(), new WatermarkModule(), new ClickGuiDashboard(), new ActivityDebug(), new BlockESP(), new AttributeSwapper(), new PrimeChunkFinder(),  new TotemHit(), new GrowthFinder(),  new ConfigModule()));
    }
 
    public List<Function> getModules(Category category) {
