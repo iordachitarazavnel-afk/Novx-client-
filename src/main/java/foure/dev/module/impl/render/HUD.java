@@ -126,5 +126,3 @@ public class HUD extends Function {
             y += itemHeight + gap;
          }
       }
-   }
-   
