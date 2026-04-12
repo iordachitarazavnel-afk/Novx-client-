@@ -49,9 +49,12 @@ public class HUD extends Function {
 
    private void renderArrayList(Renderer2D r) {
       if (System.currentTimeMillis() - this.lastUpdate > 200L || this.cachedModules.isEmpty()) {
-         this.cachedModules = (List)FourEClient.getInstance().getFunctionManager().getModules().stream().filter(Function::isState).sorted(Comparator.comparingDouble((m) -> {
-            return (double)(-r.getStringWidth(FontRegistry.INTER_MEDIUM, m.getName(), 10.0F));
-         })).collect(Collectors.toList());
+         this.cachedModules = (List)FourEClient.getInstance().getFunctionManager().getModules().stream()
+            .filter(Function::isState)
+            .sorted(Comparator.comparingDouble((m) -> {
+               return (double)(-r.getStringWidth(FontRegistry.INTER_MEDIUM, m.getName(), 10.0F));
+            }))
+            .collect(Collectors.toList());
          this.lastUpdate = System.currentTimeMillis();
       }
 
@@ -65,7 +68,7 @@ public class HUD extends Function {
 
          Function mod;
          float fontSize;
-         for(Iterator var9 = this.cachedModules.iterator(); var9.hasNext(); maxY += itemHeight + gap) {
+         for (Iterator var9 = this.cachedModules.iterator(); var9.hasNext(); maxY += itemHeight + gap) {
             mod = (Function)var9.next();
             float w = r.getStringWidth(FontRegistry.INTER_MEDIUM, mod.getName(), 10.0F) + 10.0F;
             fontSize = screenW - w - 5.0F;
@@ -77,8 +80,8 @@ public class HUD extends Function {
          maxY -= gap;
          r.prepareBlurRegion(minX - 4.0F, y, screenW - minX + 4.0F, maxY - y, 6.0F);
 
-         for(int i = 0; i < this.cachedModules.size(); ++i) {
-            mod = (Function)this.cachedModules.get(i);
+         for (int i = 0; i < this.cachedModules.size(); ++i) {
+            mod = this.cachedModules.get(i);
             String name = mod.getName();
             fontSize = 10.0F;
             float textWidth = r.getStringWidth(FontRegistry.INTER_MEDIUM, name, fontSize);
@@ -88,9 +91,8 @@ public class HUD extends Function {
             // albastru → roșu cycling
             float time = (float)(System.currentTimeMillis() % 4000L) / 4000.0F;
             float t = (time + (float)i * 0.06F) % 1.0F;
-            Color color1, color2;
+            Color color1;
             if (t < 0.5F) {
-               // albastru → roșu
                float blend = t * 2.0F;
                color1 = new Color(
                   (int)(30  + blend * 225),
@@ -98,7 +100,6 @@ public class HUD extends Function {
                   (int)(255 - blend * 255),
                   255);
             } else {
-               // roșu → albastru
                float blend = (t - 0.5F) * 2.0F;
                color1 = new Color(
                   (int)(255 - blend * 225),
@@ -106,8 +107,7 @@ public class HUD extends Function {
                   (int)(0   + blend * 255),
                   255);
             }
-            color2 = color1.darker();
-
+            Color color2 = color1.darker();
             int c1 = color1.getRGB();
             int c2 = color2.getRGB();
 
