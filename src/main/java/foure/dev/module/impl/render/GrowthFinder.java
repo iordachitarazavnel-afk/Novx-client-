@@ -34,7 +34,8 @@ import java.util.Map.Entry;
 @ModuleInfo(
     name = "GrowthFinder",
     category = Category.RENDER,
-    desc = "Detects suspicious chunk growth patterns"
+    desc = "Finds activity",
+    icon = "foure:icons/growth_finder"
 )
 public class GrowthFinder extends Function {
 
