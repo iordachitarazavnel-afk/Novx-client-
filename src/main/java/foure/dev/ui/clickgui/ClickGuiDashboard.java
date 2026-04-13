@@ -356,22 +356,32 @@ public class ClickGuiDashboard extends Function {
 
    // ── Icon loader ───────────────────────────────────────────────────────
    private Identifier getOrLoadIcon(String iconPath) {
-      if (iconCache.containsKey(iconPath)) {
-         return iconCache.get(iconPath);
-      }
-      try {
-         // iconPath format: "foure:icons/growth_finder" → assets/foure/icons/growth_finder.png
-         Identifier id = new Identifier(iconPath);
-         // verify it exists by trying to get the resource
-         mc.getResourceManager().getResource(id);
-         iconCache.put(iconPath, id);
-         return id;
-      } catch (Exception e) {
-         // resource not found — cache null to avoid retrying every frame
-         iconCache.put(iconPath, null);
-         return null;
-      }
-   }
+    // 1. Verificăm dacă e deja în cache
+    if (iconCache.containsKey(iconPath)) {
+        return iconCache.get(iconPath);
+    }
+
+    try {
+        /* CONSTRUCȚIA CĂII:
+           Dacă iconPath este "growth_finder", id va deveni "hysteria:icons/growth_finder.png"
+           Asta corespunde folderului tău: assets/hysteria/icons/growth_finder.png
+        */
+        Identifier id = new Identifier("hysteria", "icons/" + iconPath + ".png");
+
+        // 2. Verificăm dacă fișierul chiar există în folderul de resurse
+        if (mc.getResourceManager().getResource(id).isPresent()) {
+            iconCache.put(iconPath, id);
+            return id;
+        } else {
+            // Dacă nu există, punem null în cache ca să nu mai încerce la fiecare frame
+            iconCache.put(iconPath, null);
+            return null;
+        }
+    } catch (Exception e) {
+        iconCache.put(iconPath, null);
+        return null;
+    }
+}
    // ─────────────────────────────────────────────────────────────────────
 
    private void drawSettingsPanel(Renderer2D r, float x, float y, float w, float h, double rawMx, double rawMy, float scale, float px, float py) {
