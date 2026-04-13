@@ -59,9 +59,20 @@ public class Function implements Wrapper {
             this.onDisable();
             NotificationManager.add(this.getName(), "Disabled", NotificationType.DISABLE);
          }
-
       }
    }
+
+   // ── Icon support ──────────────────────────────────────────────────────
+   public String getIcon() {
+      ModuleInfo info = this.getClass().getAnnotation(ModuleInfo.class);
+      if (info == null) return "";
+      return info.icon();
+   }
+
+   public boolean hasIcon() {
+      return !this.getIcon().isEmpty();
+   }
+   // ─────────────────────────────────────────────────────────────────────
 
    @Subscribe
    public void onKey(EventPress e) {
@@ -70,7 +81,6 @@ public class Function implements Wrapper {
          if (this.key == 256 || this.key == 261) {
             this.key = -1;
          }
-
          this.binding = false;
       } else if (!this.binding) {
          if (this.key != -1) {
@@ -85,7 +95,6 @@ public class Function implements Wrapper {
                   this.setState(false);
                }
             }
-
          }
       }
    }
@@ -107,7 +116,6 @@ public class Function implements Wrapper {
                this.setState(false);
             }
          }
-
       }
    }
 
@@ -125,7 +133,6 @@ public class Function implements Wrapper {
          if (e.getAction() == 1 && e.getKey() == this.key) {
             this.toggle();
          }
-
       }
    }
 
@@ -136,7 +143,6 @@ public class Function implements Wrapper {
             if (this.key >= 1000 && this.key == 1000 + e.getButton()) {
                this.toggle();
             }
-
          }
       }
    }
@@ -147,11 +153,9 @@ public class Function implements Wrapper {
          if (this.key == 2000 && e.getDelta() > 0.0D) {
             this.toggle();
          }
-
          if (this.key == 2001 && e.getDelta() < 0.0D) {
             this.toggle();
          }
-
       }
    }
 
@@ -241,7 +245,6 @@ public class Function implements Wrapper {
       TOGGLE,
       HOLD;
 
-      // $FF: synthetic method
       private static Function.BindMode[] $values() {
          return new Function.BindMode[]{TOGGLE, HOLD};
       }
