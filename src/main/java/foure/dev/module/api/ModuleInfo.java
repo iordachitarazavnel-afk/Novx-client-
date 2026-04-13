@@ -9,5 +9,5 @@ public @interface ModuleInfo {
    String desc() default "";
    Category category();
    boolean visual() default false;
-   String icon() default ""; // calea spre iconita in assets
+   String icon() default "";
 }
