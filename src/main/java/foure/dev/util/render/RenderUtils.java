@@ -2,10 +2,11 @@ package foure.dev.util.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.BufferRenderer;
 import net.minecraft.client.render.Camera;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexFormat;
+import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Box;
 import org.joml.Matrix4f;
@@ -28,11 +29,18 @@ public class RenderUtils {
                                        float x1, float y1, float z1,
                                        float x2, float y2, float z2,
                                        Color color) {
-        int r = color.getRed(), g = color.getGreen(), b = color.getBlue(), a = color.getAlpha();
+        float r = color.getRed()   / 255.0f;
+        float g = color.getGreen() / 255.0f;
+        float b = color.getBlue()  / 255.0f;
+        float a = color.getAlpha() / 255.0f;
 
-        VertexConsumerProvider.Immediate provider =
-            mc.getBufferBuilders().getEntityVertexConsumers();
-        VertexConsumer buf = provider.getBuffer(RenderLayer.getDebugQuads());
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.disableDepthTest();
+        RenderSystem.setShaderColor(r, g, b, a);
+
+        Tessellator tess = Tessellator.getInstance();
+        var buf = tess.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
         Matrix4f mat = matrices.peek().getPositionMatrix();
 
         // bottom
@@ -66,7 +74,10 @@ public class RenderUtils {
         buf.vertex(mat, x2, y1, z2).color(r, g, b, a);
         buf.vertex(mat, x2, y1, z1).color(r, g, b, a);
 
-        provider.draw(RenderLayer.getDebugQuads());
+        BufferRenderer.drawWithGlobalProgram(buf.end());
+        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+        RenderSystem.enableDepthTest();
+        RenderSystem.disableBlend();
     }
 
     // ── Box outline ───────────────────────────────────────────────────────
@@ -75,43 +86,40 @@ public class RenderUtils {
                                         float x1, float y1, float z1,
                                         float x2, float y2, float z2,
                                         Color color) {
-        int r = color.getRed(), g = color.getGreen(), b = color.getBlue(), a = color.getAlpha();
+        float r = color.getRed()   / 255.0f;
+        float g = color.getGreen() / 255.0f;
+        float b = color.getBlue()  / 255.0f;
+        float a = color.getAlpha() / 255.0f;
 
-        VertexConsumerProvider.Immediate provider =
-            mc.getBufferBuilders().getEntityVertexConsumers();
-        VertexConsumer buf = provider.getBuffer(RenderLayer.getDebugLineStrip(1.5));
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.disableDepthTest();
+        RenderSystem.setShaderColor(r, g, b, a);
+
+        Tessellator tess = Tessellator.getInstance();
+        var buf = tess.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
         Matrix4f mat = matrices.peek().getPositionMatrix();
 
-        // bottom loop
-        buf.vertex(mat, x1, y1, z1).color(r, g, b, a);
-        buf.vertex(mat, x2, y1, z1).color(r, g, b, a);
-        buf.vertex(mat, x2, y1, z2).color(r, g, b, a);
-        buf.vertex(mat, x1, y1, z2).color(r, g, b, a);
-        buf.vertex(mat, x1, y1, z1).color(r, g, b, a);
-        // up west edge + top loop
-        buf.vertex(mat, x1, y2, z1).color(r, g, b, a);
-        buf.vertex(mat, x2, y2, z1).color(r, g, b, a);
-        buf.vertex(mat, x2, y2, z2).color(r, g, b, a);
-        buf.vertex(mat, x1, y2, z2).color(r, g, b, a);
-        buf.vertex(mat, x1, y2, z1).color(r, g, b, a);
+        // bottom edges
+        buf.vertex(mat, x1,y1,z1).color(r,g,b,a); buf.vertex(mat, x2,y1,z1).color(r,g,b,a);
+        buf.vertex(mat, x2,y1,z1).color(r,g,b,a); buf.vertex(mat, x2,y1,z2).color(r,g,b,a);
+        buf.vertex(mat, x2,y1,z2).color(r,g,b,a); buf.vertex(mat, x1,y1,z2).color(r,g,b,a);
+        buf.vertex(mat, x1,y1,z2).color(r,g,b,a); buf.vertex(mat, x1,y1,z1).color(r,g,b,a);
+        // top edges
+        buf.vertex(mat, x1,y2,z1).color(r,g,b,a); buf.vertex(mat, x2,y2,z1).color(r,g,b,a);
+        buf.vertex(mat, x2,y2,z1).color(r,g,b,a); buf.vertex(mat, x2,y2,z2).color(r,g,b,a);
+        buf.vertex(mat, x2,y2,z2).color(r,g,b,a); buf.vertex(mat, x1,y2,z2).color(r,g,b,a);
+        buf.vertex(mat, x1,y2,z2).color(r,g,b,a); buf.vertex(mat, x1,y2,z1).color(r,g,b,a);
+        // vertical edges
+        buf.vertex(mat, x1,y1,z1).color(r,g,b,a); buf.vertex(mat, x1,y2,z1).color(r,g,b,a);
+        buf.vertex(mat, x2,y1,z1).color(r,g,b,a); buf.vertex(mat, x2,y2,z1).color(r,g,b,a);
+        buf.vertex(mat, x2,y1,z2).color(r,g,b,a); buf.vertex(mat, x2,y2,z2).color(r,g,b,a);
+        buf.vertex(mat, x1,y1,z2).color(r,g,b,a); buf.vertex(mat, x1,y2,z2).color(r,g,b,a);
 
-        provider.draw(RenderLayer.getDebugLineStrip(1.5));
-
-        // remaining vertical edges
-        VertexConsumer buf2 = provider.getBuffer(RenderLayer.getDebugLineStrip(1.5));
-        buf2.vertex(mat, x2, y1, z1).color(r, g, b, a);
-        buf2.vertex(mat, x2, y2, z1).color(r, g, b, a);
-        provider.draw(RenderLayer.getDebugLineStrip(1.5));
-
-        VertexConsumer buf3 = provider.getBuffer(RenderLayer.getDebugLineStrip(1.5));
-        buf3.vertex(mat, x2, y1, z2).color(r, g, b, a);
-        buf3.vertex(mat, x2, y2, z2).color(r, g, b, a);
-        provider.draw(RenderLayer.getDebugLineStrip(1.5));
-
-        VertexConsumer buf4 = provider.getBuffer(RenderLayer.getDebugLineStrip(1.5));
-        buf4.vertex(mat, x1, y1, z2).color(r, g, b, a);
-        buf4.vertex(mat, x1, y2, z2).color(r, g, b, a);
-        provider.draw(RenderLayer.getDebugLineStrip(1.5));
+        BufferRenderer.drawWithGlobalProgram(buf.end());
+        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+        RenderSystem.enableDepthTest();
+        RenderSystem.disableBlend();
     }
 
     // ── Single line ───────────────────────────────────────────────────────
@@ -120,15 +128,26 @@ public class RenderUtils {
                                 float x1, float y1, float z1,
                                 float x2, float y2, float z2,
                                 Color color) {
-        int r = color.getRed(), g = color.getGreen(), b = color.getBlue(), a = color.getAlpha();
+        float r = color.getRed()   / 255.0f;
+        float g = color.getGreen() / 255.0f;
+        float b = color.getBlue()  / 255.0f;
+        float a = color.getAlpha() / 255.0f;
 
-        VertexConsumerProvider.Immediate provider =
-            mc.getBufferBuilders().getEntityVertexConsumers();
-        VertexConsumer buf = provider.getBuffer(RenderLayer.getDebugLineStrip(1.5));
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.disableDepthTest();
+        RenderSystem.setShaderColor(r, g, b, a);
+
+        Tessellator tess = Tessellator.getInstance();
+        var buf = tess.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
         Matrix4f mat = matrices.peek().getPositionMatrix();
         buf.vertex(mat, x1, y1, z1).color(r, g, b, a);
         buf.vertex(mat, x2, y2, z2).color(r, g, b, a);
-        provider.draw(RenderLayer.getDebugLineStrip(1.5));
+
+        BufferRenderer.drawWithGlobalProgram(buf.end());
+        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+        RenderSystem.enableDepthTest();
+        RenderSystem.disableBlend();
     }
 
     // ── Box overloads ─────────────────────────────────────────────────────
