@@ -14,10 +14,8 @@ import foure.dev.util.render.RenderUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.render.Camera;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.chunk.WorldChunk;
@@ -186,14 +184,10 @@ public class ColonFinder extends Function {
         if (renderList.isEmpty() && beamPosList.isEmpty()) return;
 
         Camera cam = RenderUtils.getCamera();
-        // FIX: cam.getPos() -> cam.getPosition() in MC 1.21.4+
         Vec3d camPos = cam.getPosition();
 
-        // build a MatrixStack from the event matrix
-        MatrixStack matrices = new MatrixStack();
-        matrices.push();
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(cam.getPitch()));
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(cam.getYaw() + 180.0F));
+        // In MC 1.21.11, rendering uses Matrix4fc directly from the event
+        org.joml.Matrix4fc mat = event.getMatrix();
 
         Color fill    = (Color) fillColor.getValue();
         Color outline = (Color) outlineColor.getValue();
@@ -202,8 +196,8 @@ public class ColonFinder extends Function {
             float rx = (float)(pos.getX() - camPos.x);
             float ry = (float)(pos.getY() - camPos.y);
             float rz = (float)(pos.getZ() - camPos.z);
-            RenderUtils.renderFilledBox (matrices, rx, ry, rz, rx+1, ry+1, rz+1, fill);
-            RenderUtils.renderBoxOutline(matrices, rx, ry, rz, rx+1, ry+1, rz+1, outline);
+            RenderUtils.renderFilledBox (mat, rx, ry, rz, rx+1, ry+1, rz+1, fill);
+            RenderUtils.renderBoxOutline(mat, rx, ry, rz, rx+1, ry+1, rz+1, outline);
         }
 
         if ((Boolean) beamEnabled.getValue()) {
@@ -218,15 +212,13 @@ public class ColonFinder extends Function {
                 float cz   = (float)(base.getZ() + 0.5 - camPos.z);
                 float yBot = (float)(base.getY() - camPos.y);
                 float yTop = yBot + bh;
-                RenderUtils.renderFilledBox(matrices, cx-half, yBot, cz-half, cx+half, yTop, cz+half, beamFill);
-                RenderUtils.drawLine(matrices, cx-half, yBot, cz-half, cx-half, yTop, cz-half, beamEdge);
-                RenderUtils.drawLine(matrices, cx+half, yBot, cz-half, cx+half, yTop, cz-half, beamEdge);
-                RenderUtils.drawLine(matrices, cx+half, yBot, cz+half, cx+half, yTop, cz+half, beamEdge);
-                RenderUtils.drawLine(matrices, cx-half, yBot, cz+half, cx-half, yTop, cz+half, beamEdge);
+                RenderUtils.renderFilledBox(mat, cx-half, yBot, cz-half, cx+half, yTop, cz+half, beamFill);
+                RenderUtils.drawLine(mat, cx-half, yBot, cz-half, cx-half, yTop, cz-half, beamEdge);
+                RenderUtils.drawLine(mat, cx+half, yBot, cz-half, cx+half, yTop, cz-half, beamEdge);
+                RenderUtils.drawLine(mat, cx+half, yBot, cz+half, cx+half, yTop, cz+half, beamEdge);
+                RenderUtils.drawLine(mat, cx-half, yBot, cz+half, cx-half, yTop, cz+half, beamEdge);
             }
         }
-
-        matrices.pop();
     }
 
     private static long packXZ(int x, int z)  { return (long)x << 32 | (long)z & 0xFFFFFFFFL; }
