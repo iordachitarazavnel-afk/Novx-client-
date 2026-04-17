@@ -2,7 +2,13 @@ package foure.dev.util.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.ShaderProgram;
+import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.render.Camera;
+import net.minecraft.client.render.VertexFormat;
+import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.render.BufferRenderer;
+import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Box;
 import org.joml.Matrix4f;
@@ -10,11 +16,12 @@ import org.joml.Matrix4f;
 import java.awt.Color;
 
 /**
- * RenderUtils for MC 1.21.11 / Yarn 1.21.11+build.2
+ * RenderUtils for MC 1.21.4+ / Yarn 1.21.4+
  *
- * Uses Tessellator/BufferBuilder pattern via reflection-safe approach.
- * In 1.21.11, BufferRenderer and VertexFormat moved packages.
- * We use the WorldRenderer helper approach instead.
+ * Changes vs older versions:
+ *  - RenderSystem.enableBlend/disableBlend/defaultBlendFunc/enableDepthTest/disableDepthTest removed
+ *  - VertexFormat moved to net.minecraft.client.render.VertexFormat (DrawMode is inner class)
+ *  - BufferRenderer.drawWithGlobalProgram -> BufferRenderer.draw
  */
 public class RenderUtils {
 
@@ -33,17 +40,12 @@ public class RenderUtils {
         float b = color.getBlue()  / 255.0f;
         float a = color.getAlpha() / 255.0f;
 
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.disableDepthTest();
-
-        net.minecraft.client.render.Tessellator tess =
-            net.minecraft.client.render.Tessellator.getInstance();
+        Tessellator tess = Tessellator.getInstance();
         Matrix4f mat = matrices.peek().getPositionMatrix();
 
         var buf = tess.begin(
-            net.minecraft.client.render.VertexFormat.DrawMode.QUADS,
-            net.minecraft.client.render.VertexFormats.POSITION_COLOR);
+            VertexFormat.DrawMode.QUADS,
+            VertexFormats.POSITION_COLOR);
 
         // bottom
         buf.vertex(mat, x1,y1,z1).color(r,g,b,a);
@@ -76,10 +78,7 @@ public class RenderUtils {
         buf.vertex(mat, x2,y1,z2).color(r,g,b,a);
         buf.vertex(mat, x2,y1,z1).color(r,g,b,a);
 
-        net.minecraft.client.render.BufferRenderer.drawWithGlobalProgram(buf.end());
-
-        RenderSystem.enableDepthTest();
-        RenderSystem.disableBlend();
+        BufferRenderer.draw(buf.end());
     }
 
     public static void renderBoxOutline(MatrixStack matrices,
@@ -91,17 +90,12 @@ public class RenderUtils {
         float b = color.getBlue()  / 255.0f;
         float a = color.getAlpha() / 255.0f;
 
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.disableDepthTest();
-
-        net.minecraft.client.render.Tessellator tess =
-            net.minecraft.client.render.Tessellator.getInstance();
+        Tessellator tess = Tessellator.getInstance();
         Matrix4f mat = matrices.peek().getPositionMatrix();
 
         var buf = tess.begin(
-            net.minecraft.client.render.VertexFormat.DrawMode.DEBUG_LINES,
-            net.minecraft.client.render.VertexFormats.POSITION_COLOR);
+            VertexFormat.DrawMode.DEBUG_LINES,
+            VertexFormats.POSITION_COLOR);
 
         buf.vertex(mat,x1,y1,z1).color(r,g,b,a); buf.vertex(mat,x2,y1,z1).color(r,g,b,a);
         buf.vertex(mat,x2,y1,z1).color(r,g,b,a); buf.vertex(mat,x2,y1,z2).color(r,g,b,a);
@@ -116,10 +110,7 @@ public class RenderUtils {
         buf.vertex(mat,x2,y1,z2).color(r,g,b,a); buf.vertex(mat,x2,y2,z2).color(r,g,b,a);
         buf.vertex(mat,x1,y1,z2).color(r,g,b,a); buf.vertex(mat,x1,y2,z2).color(r,g,b,a);
 
-        net.minecraft.client.render.BufferRenderer.drawWithGlobalProgram(buf.end());
-
-        RenderSystem.enableDepthTest();
-        RenderSystem.disableBlend();
+        BufferRenderer.draw(buf.end());
     }
 
     public static void drawLine(MatrixStack matrices,
@@ -131,25 +122,17 @@ public class RenderUtils {
         float b = color.getBlue()  / 255.0f;
         float a = color.getAlpha() / 255.0f;
 
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.disableDepthTest();
-
-        net.minecraft.client.render.Tessellator tess =
-            net.minecraft.client.render.Tessellator.getInstance();
+        Tessellator tess = Tessellator.getInstance();
         Matrix4f mat = matrices.peek().getPositionMatrix();
 
         var buf = tess.begin(
-            net.minecraft.client.render.VertexFormat.DrawMode.DEBUG_LINES,
-            net.minecraft.client.render.VertexFormats.POSITION_COLOR);
+            VertexFormat.DrawMode.DEBUG_LINES,
+            VertexFormats.POSITION_COLOR);
 
         buf.vertex(mat, x1,y1,z1).color(r,g,b,a);
         buf.vertex(mat, x2,y2,z2).color(r,g,b,a);
 
-        net.minecraft.client.render.BufferRenderer.drawWithGlobalProgram(buf.end());
-
-        RenderSystem.enableDepthTest();
-        RenderSystem.disableBlend();
+        BufferRenderer.draw(buf.end());
     }
 
     public static void renderFilledBox(MatrixStack matrices, Box box, Color color) {
