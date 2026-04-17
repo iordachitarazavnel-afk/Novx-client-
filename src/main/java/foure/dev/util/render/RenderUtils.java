@@ -1,11 +1,11 @@
 package foure.dev.util.render;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.VertexFormat;
-import net.minecraft.client.gl.VertexFormats;
-import net.minecraft.client.gl.BufferRenderer;
+import net.minecraft.client.render.BufferRenderer;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexFormat;
+import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Box;
 import org.joml.Matrix4f;
@@ -75,7 +75,7 @@ public class RenderUtils {
         buf.vertex(mat, x2,y1,z2).color(r,g,b,a);
         buf.vertex(mat, x2,y1,z1).color(r,g,b,a);
 
-        BufferRenderer.draw(buf.end());
+        BufferRenderer.drawWithGlobalProgram(buf.end());
     }
 
     public static void renderBoxOutline(MatrixStack matrices,
@@ -107,7 +107,7 @@ public class RenderUtils {
         buf.vertex(mat,x2,y1,z2).color(r,g,b,a); buf.vertex(mat,x2,y2,z2).color(r,g,b,a);
         buf.vertex(mat,x1,y1,z2).color(r,g,b,a); buf.vertex(mat,x1,y2,z2).color(r,g,b,a);
 
-        BufferRenderer.draw(buf.end());
+        BufferRenderer.drawWithGlobalProgram(buf.end());
     }
 
     public static void drawLine(MatrixStack matrices,
@@ -129,7 +129,7 @@ public class RenderUtils {
         buf.vertex(mat, x1,y1,z1).color(r,g,b,a);
         buf.vertex(mat, x2,y2,z2).color(r,g,b,a);
 
-        BufferRenderer.draw(buf.end());
+        BufferRenderer.drawWithGlobalProgram(buf.end());
     }
 
     public static void renderFilledBox(MatrixStack matrices, Box box, Color color) {
