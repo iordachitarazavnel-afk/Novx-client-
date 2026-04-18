@@ -299,12 +299,12 @@ public class ClickGuiDashboard extends Function {
       // unavailable — icon rendering requires a separate approach.
       if (iconCache.containsKey(iconPath)) return iconCache.get(iconPath);
       try {
-         Identifier id = Identifier.of("foure", "icons/" + iconPath + ".png");
+         Identifier id = Identifier.of("hysteria", "icons/" + iconPath + ".png");
          InputStream stream = mc.getResourceManager().open(id);
          NativeImage img = NativeImage.read(stream);
          stream.close();
          NativeImageBackedTexture tex = new NativeImageBackedTexture(
-             () -> "foure_icon_" + iconPath, img);
+             () -> "hysteria_icon_" + iconPath, img);
          mc.getTextureManager().registerTexture(id, tex);
          iconRegistered.put(iconPath, true);
       } catch (Exception e) {
