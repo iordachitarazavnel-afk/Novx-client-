@@ -29,7 +29,7 @@ public class RenderUtils {
 
         try (BufferAllocator alloc = new BufferAllocator(1024)) {
             VertexConsumerProvider.Immediate vcp = VertexConsumerProvider.immediate(alloc);
-            VertexConsumer vc = vcp.getBuffer(RenderLayer.getDebugFilledBox());
+            VertexConsumer vc = vcp.getBuffer(RenderLayers.debugFilledBox());
 
             vc.vertex(mat,x1,y1,z2).color(argb);
             vc.vertex(mat,x2,y1,z2).color(argb);
@@ -74,8 +74,8 @@ public class RenderUtils {
 
         try (BufferAllocator alloc = new BufferAllocator(1024)) {
             VertexConsumerProvider.Immediate vcp = VertexConsumerProvider.immediate(alloc);
-            VertexConsumer vc = vcp.getBuffer(RenderLayer.getLines());
-
+            VertexConsumer vc = vcp.getBuffer(RenderLayers.lines());
+            
             vc.vertex(mat,x1,y1,z1).color(argb); vc.vertex(mat,x2,y1,z1).color(argb);
             vc.vertex(mat,x2,y1,z1).color(argb); vc.vertex(mat,x2,y1,z2).color(argb);
             vc.vertex(mat,x2,y1,z2).color(argb); vc.vertex(mat,x1,y1,z2).color(argb);
@@ -102,7 +102,7 @@ public class RenderUtils {
 
         try (BufferAllocator alloc = new BufferAllocator(128)) {
             VertexConsumerProvider.Immediate vcp = VertexConsumerProvider.immediate(alloc);
-            VertexConsumer vc = vcp.getBuffer(RenderLayer.getLines());
+            VertexConsumer vc = vcp.getBuffer(RenderLayers.lines());
             vc.vertex(mat,x1,y1,z1).color(argb);
             vc.vertex(mat,x2,y2,z2).color(argb);
             vcp.draw();
