@@ -1,4 +1,4 @@
-package foure.dev.module.impl.visual;
+package foure.dev.module.impl.basefinds;
 
 import com.google.common.eventbus.Subscribe;
 import foure.dev.event.impl.render.RenderEvent;
@@ -43,7 +43,7 @@ import net.minecraft.world.Heightmap.Type;
 
 @ModuleInfo(
    name = "ChunkFinder",
-   category = Category.RENDER,
+   category = Category.BASEFINDS,
    desc = "Detects suspicious chunks that might contain bases."
 )
 public class ChunkFinder extends Function {
