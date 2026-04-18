@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "id": "hysteria",
-  "version": "1.0-SNAPSHOT",
-  "name": "hysteria",
-  "description": "4e Client - A powerful Minecraft utility mod",
+  "version": "1.0",
+  "name": "novx",
+  "description": "A powerful Minecraft utility mod",
   "authors": [
     "nnpg",
     "ky.jar",
