@@ -1,4 +1,4 @@
-package foure.dev.module.impl.render;
+package foure.dev.module.impl.basefinds;
 
 import com.google.common.eventbus.Subscribe;
 import foure.dev.event.impl.game.EventUpdate;
@@ -26,7 +26,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @ModuleInfo(
     name = "ActivityDebug",
-    category = Category.RENDER,
+    category = Category.BASEFINDS,
     desc = "Highlights suspicious chunk load/unload activity"
 )
 public class ActivityDebug extends Function {
