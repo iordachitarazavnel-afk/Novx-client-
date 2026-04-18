@@ -1,4 +1,4 @@
-package foure.dev.module.impl.render;
+package foure.dev.module.impl.basefinds;
 
 import com.google.common.eventbus.Subscribe;
 import foure.dev.event.impl.game.EventUpdate;
@@ -33,7 +33,7 @@ import java.util.Map.Entry;
 
 @ModuleInfo(
     name = "GrowthFinder",
-    category = Category.RENDER,
+    category = Category.BASEFINDS,
     desc = "Finds activity",
     icon = "foure:icons/growth_finder"
 )
