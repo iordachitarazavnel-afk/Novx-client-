@@ -10,6 +10,7 @@ import foure.dev.module.setting.api.Setting;
 import foure.dev.module.setting.impl.BooleanSetting;
 import foure.dev.util.render.core.Renderer2D;
 import foure.dev.util.render.text.FontRegistry;
+import foure.dev.ui.notification.NotificationManager;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -36,16 +37,17 @@ public class HUD extends Function {
    public HUD() {
       this.addSettings(new Setting[]{this.watermark, this.arraylist, this.info});
    }
-
-   @Subscribe
-   public void onRender(RenderEvent event) {
-      Renderer2D r = event.renderer();
-      if ((Boolean) this.arraylist.getValue()) {
-         this.renderArrayList(r);
-      }
-      if ((Boolean) this.info.getValue()) {
-         this.renderInfo(r);
-      }
+@Subscribe
+public void onRender(RenderEvent event) {
+    Renderer2D r = event.renderer();
+    if ((Boolean) this.arraylist.getValue()) {
+        this.renderArrayList(r);
+    }
+    if ((Boolean) this.info.getValue()) {
+        this.renderInfo(r);
+    }
+    NotificationManager.render(r); // adaugă asta
+}
    }
 
    private void renderArrayList(Renderer2D r) {
