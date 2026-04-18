@@ -1,4 +1,4 @@
-package foure.dev.module.impl.render;
+package foure.dev.module.impl.basefinds;
 
 import com.google.common.eventbus.Subscribe;
 import foure.dev.event.impl.game.EventUpdate;
@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 @ModuleInfo(
     name = "ColonFinder",
-    category = Category.RENDER,
+    category = Category.BASEFINDS,
     desc = "Pattern-based block column detector with beams"
 )
 public class ColonFinder extends Function {
