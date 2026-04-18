@@ -326,6 +326,7 @@ public class ClickGuiDashboard extends Function {
         iconCache.put(iconPath, 0);
         return 0;
     }
+}  // ← adaugă asta
    // ─────────────────────────────────────────────────────────────────────
 
    private void drawSettingsPanel(Renderer2D r, float x, float y, float w, float h, double rawMx, double rawMy, float scale, float px, float py) {
