@@ -186,6 +186,7 @@ public class ColonFinder extends Function {
         if (renderList.isEmpty() && beamPosList.isEmpty()) return;
 
         Camera cam = RenderUtils.getCamera();
+        // FIX: cam.getPos() -> cam.getPosition() in MC 1.21.4+
         Vec3d camPos = cam.getPosition();
 
         // build a MatrixStack from the event matrix
