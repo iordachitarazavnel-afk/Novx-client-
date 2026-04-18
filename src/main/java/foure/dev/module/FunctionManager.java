@@ -59,7 +59,7 @@ import foure.dev.module.impl.render.ActivityDebug;
 import foure.dev.module.impl.render.BlockESP;
 import foure.dev.module.impl.render.ColonFinder;
 import foure.dev.module.impl.render.targetesp.TargetEspModule;
-import foure.dev.module.impl.visual.ChunkFinder;
+import foure.dev.module.impl.basefinds.ChunkFinder;
 import foure.dev.module.impl.visual.FullBright;
 import foure.dev.module.impl.config.ConfigModule;
 import foure.dev.ui.clickgui.ClickGuiDashboard;
