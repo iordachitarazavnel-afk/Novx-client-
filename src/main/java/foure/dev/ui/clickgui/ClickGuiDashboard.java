@@ -294,26 +294,38 @@ public class ClickGuiDashboard extends Function {
    private final java.util.Map<String, Boolean> iconRegistered = new java.util.HashMap<>();
 
    private int getOrLoadIcon(String iconPath) {
-      // In 1.21.11 GL int ids are not publicly accessible.
-      // We register the texture and return 0; drawRgbaTexture will also be
-      // unavailable — icon rendering requires a separate approach.
-      if (iconCache.containsKey(iconPath)) return iconCache.get(iconPath);
-      try {
-         Identifier id = Identifier.of("hysteria", "icons/" + iconPath + ".png");
-         InputStream stream = mc.getResourceManager().open(id);
-         NativeImage img = NativeImage.read(stream);
-         stream.close();
-         NativeImageBackedTexture tex = new NativeImageBackedTexture(
-             () -> "hysteria_icon_" + iconPath, img);
-         mc.getTextureManager().registerTexture(id, tex);
-         iconRegistered.put(iconPath, true);
-      } catch (Exception e) {
-         // ignore
-      }
-      // Return 0 — icon rendering via GL id is not supported in 1.21.11
-      iconCache.put(iconPath, 0);
-      return 0;
-   }
+    if (iconCache.containsKey(iconPath)) return iconCache.get(iconPath);
+    try {
+        Identifier id = Identifier.of("hysteria", "icons/" + iconPath + ".png");
+        InputStream stream = mc.getResourceManager().open(id);
+        NativeImage img = NativeImage.read(stream);
+        stream.close();
+        NativeImageBackedTexture tex = new NativeImageBackedTexture(
+            () -> "hysteria_icon_" + iconPath, img);
+        mc.getTextureManager().registerTexture(id, tex);
+        // Obtinem GL id prin reflection din campul privat al AbstractTexture
+        int glId = 0;
+        try {
+            java.lang.reflect.Field f = net.minecraft.client.texture.AbstractTexture.class
+                .getDeclaredField("glId");
+            f.setAccessible(true);
+            glId = f.getInt(tex);
+        } catch (Exception ignored) {
+            // fallback: incearca sa uploadeze textura si ia id-ul
+            tex.upload();
+            try {
+                java.lang.reflect.Field f = net.minecraft.client.texture.AbstractTexture.class
+                    .getDeclaredField("glId");
+                f.setAccessible(true);
+                glId = f.getInt(tex);
+            } catch (Exception ignored2) {}
+        }
+        iconCache.put(iconPath, glId);
+        return glId;
+    } catch (Exception e) {
+        iconCache.put(iconPath, 0);
+        return 0;
+    }
    // ─────────────────────────────────────────────────────────────────────
 
    private void drawSettingsPanel(Renderer2D r, float x, float y, float w, float h, double rawMx, double rawMy, float scale, float px, float py) {
