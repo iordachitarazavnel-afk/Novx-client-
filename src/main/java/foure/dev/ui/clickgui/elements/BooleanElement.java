@@ -5,7 +5,7 @@ import foure.dev.module.api.Function;
 import foure.dev.module.setting.api.Setting;
 import foure.dev.module.setting.api.SettingElement;
 import foure.dev.module.setting.impl.BooleanSetting;
-import foure.dev.ui.clickgui.ClickGuiDashboard;
+import foure.dev.ui.clickgui.NovxClickGui;
 import foure.dev.util.render.animation.AnimationSystem;
 import foure.dev.util.render.animation.Easings;
 import foure.dev.util.render.core.Renderer2D;
