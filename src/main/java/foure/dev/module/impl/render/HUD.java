@@ -48,7 +48,6 @@ public void onRender(RenderEvent event) {
     }
     NotificationManager.render(r); // adaugă asta
 }
-   }
 
    private void renderArrayList(Renderer2D r) {
       if (System.currentTimeMillis() - this.lastUpdate > 200L || this.cachedModules.isEmpty()) {
