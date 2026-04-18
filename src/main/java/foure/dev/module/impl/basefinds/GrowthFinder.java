@@ -35,7 +35,7 @@ import java.util.Map.Entry;
     name = "GrowthFinder",
     category = Category.BASEFINDS,
     desc = "Finds activity",
-    icon = "foure:icons/growth_finder"
+    icon = "growth_finder"
 )
 public class GrowthFinder extends Function {
 
