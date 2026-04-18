@@ -76,7 +76,7 @@ public class NotificationManager {
                renderer.shadow(targetX, renderY, width, itemHeight, 20.0F, 3.0F, 1.5F, (new Color(80, 40, 160, 100)).getRGB());
                renderer.gradient(targetX, renderY, width, itemHeight, 8.0F, (new Color(45, 30, 70, 240)).getRGB(), (new Color(30, 20, 50, 240)).getRGB(), (new Color(25, 15, 40, 245)).getRGB(), (new Color(40, 25, 60, 245)).getRGB());
                renderer.gradient(targetX + 1.0F, renderY + 1.0F, width - 2.0F, itemHeight - 2.0F, 7.0F, (new Color(100, 80, 180, 20)).getRGB(), (new Color(0, 0, 0, 0)).getRGB(), (new Color(0, 0, 0, 0)).getRGB(), (new Color(100, 80, 180, 20)).getRGB());
-               renderer.rectOutline(targetX, renderY, width, itemHeight, 8.0F, (new Color(130, 90, 220, 120)).getRGB(), 1.5F);
+               renderer.rectOutline(targetX, renderY, width, itemHeight, 8.0F, (new Color(200, 30, 30, 180)).getRGB(), 1.5F);
                renderer.rect(targetX + 6.0F, renderY + 8.0F, 3.0F, itemHeight - 16.0F, 1.5F, accent);
                renderer.shadow(targetX + 6.0F, renderY + 8.0F, 3.0F, itemHeight - 16.0F, 5.0F, 2.0F, 1.0F, accent);
                renderer.text(fontTitle, targetX + 18.0F, renderY + 10.0F, 9.0F, n.getTitle(), (new Color(240, 230, 255)).getRGB(), "l");
@@ -90,26 +90,25 @@ public class NotificationManager {
    }
 
    private static int getColor(NotificationType type) {
-      int var10000;
-      switch(type) {
-      case SUCCESS:
-         var10000 = (new Color(80, 255, 160)).getRGB();
-         break;
-      case DISABLE:
-      case ERROR:
-         var10000 = (new Color(255, 60, 80)).getRGB();
-         break;
-      case INFO:
-         var10000 = (new Color(80, 180, 255)).getRGB();
-         break;
-      case WARNING:
-         var10000 = (new Color(255, 210, 60)).getRGB();
-         break;
-      default:
-         throw new MatchException((String)null, (Throwable)null);
-      }
-
-      return var10000;
+    int var10000;
+    switch(type) {
+    case SUCCESS:
+        var10000 = (new Color(220, 30, 30)).getRGB();
+        break;
+    case DISABLE:
+    case ERROR:
+        var10000 = (new Color(180, 10, 10)).getRGB();
+        break;
+    case INFO:
+        var10000 = (new Color(255, 60, 40)).getRGB();
+        break;
+    case WARNING:
+        var10000 = (new Color(255, 80, 50)).getRGB();
+        break;
+    default:
+        throw new MatchException((String)null, (Throwable)null);
+    }
+    return var10000;
    }
 
    private static float easeOutBack(float x) {
