@@ -51,9 +51,9 @@ public class BooleanElement implements SettingElement {
          }
 
          if (button == 1) {
-            Function clickGui = FourEClient.getInstance().getFunctionManager().getModule(ClickGuiDashboard.class);
-            if (clickGui instanceof ClickGuiDashboard) {
-               ClickGuiDashboard dashboard = (ClickGuiDashboard)clickGui;
+            Function clickGui = FourEClient.getInstance().getFunctionManager().getModule(NovxClickGui.class);
+            if (clickGui instanceof NovxClickGui) {
+               NovxClickGui dashboard = (NovxClickGui)clickGui;
                dashboard.getBindPopup().open(this.setting, (float)mouseX - 50.0F, (float)mouseY - 10.0F);
             }
 
