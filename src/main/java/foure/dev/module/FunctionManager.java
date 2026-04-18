@@ -61,6 +61,7 @@ import foure.dev.module.impl.render.ColonFinder;
 import foure.dev.module.impl.render.targetesp.TargetEspModule;
 import foure.dev.module.impl.visual.ChunkFinder;
 import foure.dev.module.impl.visual.FullBright;
+import foure.dev.module.impl.config.ConfigModule;
 import foure.dev.ui.clickgui.ClickGuiDashboard;
 import java.util.ArrayList;
 import java.util.Arrays;
