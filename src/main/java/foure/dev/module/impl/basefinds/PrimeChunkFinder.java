@@ -1,4 +1,4 @@
-package foure.dev.module.impl.render;
+package foure.dev.module.impl.basefinds;
 
 import com.google.common.eventbus.Subscribe;
 import foure.dev.event.impl.game.EventUpdate;
@@ -35,7 +35,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @ModuleInfo(
     name = "PrimeChunkFinder",
-    category = Category.RENDER,
+    category = Category.BASEFINDS,
     desc = "Detects suspicious chunks that might contain bases"
 )
 public class PrimeChunkFinder extends Function {
