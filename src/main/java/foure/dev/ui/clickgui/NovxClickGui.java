@@ -581,7 +581,6 @@ public class NovxClickGui extends Function {
             if (mx >= sbX && mx <= sbX + contentW - 20f && my >= sbY && my <= sbY + 18f) {
                 searchFocused = !searchFocused; return;
             }
-            if (searchFocused) searchFocused = false;
         }
     }
 
