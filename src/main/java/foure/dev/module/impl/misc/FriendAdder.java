@@ -2,7 +2,7 @@ package foure.dev.module.impl.misc;
 
 import com.google.common.eventbus.Subscribe;
 import foure.dev.event.impl.game.EventUpdate;
-import foure.dev.managers.FriendManager;
+import foure.dev.config.FriendManager;
 import foure.dev.module.api.Category;
 import foure.dev.module.api.Function;
 import foure.dev.module.api.ModuleInfo;
