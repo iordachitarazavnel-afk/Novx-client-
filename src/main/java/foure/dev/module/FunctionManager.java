@@ -6,6 +6,7 @@ import foure.dev.module.impl.config.ConfigModule;
 import foure.dev.module.impl.combat.AnchorMacro;
 import foure.dev.module.impl.combat.AttributeSwapper;
 import foure.dev.module.impl.combat.TotemHit;
+import foure.dev.module.impl.combat.AnchorExploderV2;
 import foure.dev.module.impl.combat.AutoCrystal;
 import foure.dev.module.impl.combat.AutoDoubleHand;
 import foure.dev.module.impl.combat.AutoWeapon;
