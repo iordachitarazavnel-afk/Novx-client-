@@ -4,6 +4,7 @@ import foure.dev.module.api.Category;
 import foure.dev.module.api.Function;
 import foure.dev.module.impl.config.ConfigModule;
 import foure.dev.module.impl.combat.AnchorMacro;
+import foure.dev.module.impl.combat.AutoMace;
 import foure.dev.module.impl.combat.MaceSwap;
 import foure.dev.module.impl.combat.DoubleAnchor;
 import foure.dev.module.impl.combat.AttributeSwapper;
