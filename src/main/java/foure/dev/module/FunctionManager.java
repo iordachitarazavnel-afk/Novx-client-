@@ -38,7 +38,6 @@ import foure.dev.module.impl.misc.NameProtect;
 import foure.dev.module.impl.misc.Compass;
 import foure.dev.module.impl.misc.FriendAdder;
 import foure.dev.module.impl.movement.AutoEat;
-import foure.dev.module.impl.movement.ElytraAutoFly;
 import foure.dev.module.impl.movement.AutoFirework;
 import foure.dev.module.impl.movement.ShortPearl;
 import foure.dev.module.impl.movement.AutoJumpReset;
