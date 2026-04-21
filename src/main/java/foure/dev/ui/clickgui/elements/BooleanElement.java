@@ -5,7 +5,7 @@ import foure.dev.module.api.Function;
 import foure.dev.module.setting.api.Setting;
 import foure.dev.module.setting.api.SettingElement;
 import foure.dev.module.setting.impl.BooleanSetting;
-import foure.dev.ui.clickgui.NovxClickGui;
+import foure.dev.ui.clickgui.NovxClickGuiFull;
 import foure.dev.util.render.animation.AnimationSystem;
 import foure.dev.util.render.animation.Easings;
 import foure.dev.util.render.core.Renderer2D;
@@ -51,9 +51,9 @@ public class BooleanElement implements SettingElement {
          }
 
          if (button == 1) {
-            Function clickGui = FourEClient.getInstance().getFunctionManager().getModule(NovxClickGui.class);
-            if (clickGui instanceof NovxClickGui) {
-               NovxClickGui dashboard = (NovxClickGui)clickGui;
+            Function clickGui = FourEClient.getInstance().getFunctionManager().getModule(NovxClickGuiFull.class);
+            if (clickGui instanceof NovxClickGuiFull) {
+               NovxClickGui dashboard = (NovxClickGuiFull)clickGui;
                dashboard.getBindPopup().open(this.setting, (float)mouseX - 50.0F, (float)mouseY - 10.0F);
             }
 
