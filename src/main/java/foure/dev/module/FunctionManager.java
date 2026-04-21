@@ -71,7 +71,7 @@ import foure.dev.module.impl.basefinds.ActivityDebug;
 import foure.dev.module.impl.basefinds.ColonFinder;
 import foure.dev.module.impl.visual.FullBright;
 import foure.dev.module.impl.config.ConfigModule;
-import foure.dev.ui.clickgui.NovxClickGui;
+import foure.dev.ui.clickgui.NovxClickGuiFull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
