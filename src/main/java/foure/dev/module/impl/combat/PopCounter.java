@@ -58,7 +58,7 @@ public class PopCounter extends Function {
                   if ((Boolean)this.announceChat.getValue()) {
                      var10000 = mc.player;
                      var10001 = String.valueOf(Formatting.GRAY);
-                     var10000.sendMessage(Text.literal(var10001 + "[" + String.valueOf(Formatting.BLUE) + "4e Client" + String.valueOf(Formatting.GRAY) + "] " + String.valueOf(Formatting.RESET) + message), false);
+                     var10000.sendMessage(Text.literal(var10001 + "[" + String.valueOf(Formatting.BLUE) + "novx Client" + String.valueOf(Formatting.GRAY) + "] " + String.valueOf(Formatting.RESET) + message), false);
                   }
 
                   if ((Boolean)this.announceToast.getValue()) {
