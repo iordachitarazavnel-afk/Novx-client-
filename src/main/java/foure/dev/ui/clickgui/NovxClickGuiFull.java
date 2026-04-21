@@ -5,7 +5,7 @@ import foure.dev.FourEClient;
 import foure.dev.event.impl.input.EventMouseScroll;
 import foure.dev.event.impl.presss.EventPress;
 import foure.dev.event.impl.render.RenderEvent;
-import foure.dev.managers.FriendManager;
+import foure.dev.config.FriendManager;
 import foure.dev.module.api.Category;
 import foure.dev.module.api.Function;
 import foure.dev.module.api.ModuleInfo;
