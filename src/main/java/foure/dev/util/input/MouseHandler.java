@@ -2,7 +2,7 @@ package foure.dev.util.input;
 
 import foure.dev.FourEClient;
 import foure.dev.module.impl.render.EditHudModule;
-import foure.dev.ui.clickgui.NovxClickGui;
+import foure.dev.ui.clickgui.NovxClickGuiFull;
 import net.minecraft.client.MinecraftClient;
 import org.lwjgl.glfw.GLFW;
 
@@ -15,7 +15,7 @@ public class MouseHandler {
    public static void handleMouse() {
       MinecraftClient mc = MinecraftClient.getInstance();
       if (mc.getWindow() != null) {
-         NovxClickGui clickGui = (NovxClickGui)FourEClient.getInstance().getFunctionManager().getModule(NovxClickGui.class);
+         NovxClickGuiFull clickGui = (NovxClickGuiFull)FourEClient.getInstance().getFunctionManager().getModule(NovxClickGuiFull.class);
          EditHudModule editHud = (EditHudModule)FourEClient.getInstance().getFunctionManager().getModule(EditHudModule.class);
          boolean isGuiOpen = clickGui != null && clickGui.isOpen();
          boolean isHudEditOpen = editHud != null && editHud.isOpen();
