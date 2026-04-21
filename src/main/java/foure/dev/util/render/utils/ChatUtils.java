@@ -12,9 +12,9 @@ public final class ChatUtils implements Wrapper {
       if (mc.player != null && mc.world != null) {
          MutableText text = Text.literal("");
 
-         for (int i = 0; i < "4e Client".length(); ++i) {
+         for (int i = 0; i < "Novx Client".length(); ++i) {
             text.append(
-                    Text.literal(String.valueOf("4e Client".charAt(i)))
+                    Text.literal(String.valueOf("novx Client".charAt(i)))
                             .setStyle(
                                     Style.EMPTY
                                             .withBold(true)
