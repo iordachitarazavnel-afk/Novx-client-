@@ -76,6 +76,7 @@ public class Function implements Wrapper {
 
    @Subscribe
    public void onKey(EventPress e) {
+      if (mc.currentScreen != null) return;
       if (this.binding && e.getAction() == 1) {
          this.key = e.getKey();
          if (this.key == 256 || this.key == 261) {
