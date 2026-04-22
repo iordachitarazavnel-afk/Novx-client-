@@ -64,7 +64,7 @@ public class StorageESP extends Function {
    private final ColorSetting barrelColor = new ColorSetting("BarrelColor", this, new Color(255, 160, 0, 255));
    private final ColorSetting spawnerColor = new ColorSetting("SpawnerColor", this, new Color(0, 255, 0, 255));
    private final ColorSetting otherColor = new ColorSetting("OtherColor", this, new Color(140, 140, 140, 255));
-   private final BooleanSetting hideOpened = new BooleanSetting("HideOpened", false);
+   private final BooleanSetting hideOpened = new BooleanSetting("HideOpened", true);
    private final ColorSetting openedColor = new ColorSetting("OpenedColor", this, new Color(100, 100, 100, 150));
    private final BooleanSetting debug = new BooleanSetting("Debug", false);
    private final Set<BlockPos> interactedBlocks = new HashSet();
