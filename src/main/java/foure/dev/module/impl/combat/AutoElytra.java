@@ -21,7 +21,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @ModuleInfo(
     name = "AutoElytra",
     category = Category.COMBAT,
-    desc = "change automated to elytra "
+    desc = "Schimba automat elytra si pieptarul in jurul ferestrelor de mace."
 )
 public class AutoElytra extends Function {
 
@@ -90,9 +90,9 @@ public class AutoElytra extends Function {
     /** Apelat de AutoMace dupa lovire */
     public void onMaceHit() {
         if (fullNullCheck()) return;
-        maceReequipAt      = System.currentTimeMillis() + (long) reequipDelay.getValue();
+        maceReequipAt      = System.currentTimeMillis() + reequipDelay.getValueLong();
         suppressChestUntil = System.currentTimeMillis()
-            + (long) reequipDelay.getValue()
+            + reequipDelay.getValueLong()
             + getRandomMaxDelay() + 250L;
     }
 
@@ -298,12 +298,12 @@ public class AutoElytra extends Function {
 
     private long getRandomExtraDelay() {
         if (!(Boolean) randomization.getValue()) return 0L;
-        long min = Math.max(0L, (long) randomMinDelay.getValue());
-        long max = Math.max(min, (long) randomMaxDelay.getValue());
+        long min = Math.max(0L, randomMinDelay.getValueLong());
+        long max = Math.max(min, randomMaxDelay.getValueLong());
         return min == max ? min : ThreadLocalRandom.current().nextLong(min, max + 1L);
     }
 
     private long getRandomMaxDelay() {
-        return (long) randomMaxDelay.getValue();
+        return randomMaxDelay.getValueLong();
     }
 }
