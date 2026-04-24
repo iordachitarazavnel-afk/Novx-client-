@@ -22,6 +22,7 @@ loom {
 
 repositories {
     maven { url 'https://jitpack.io' }
+    maven { url 'https://maven.labymod.net/releases' }
 }
 
 dependencies {
@@ -34,6 +35,7 @@ dependencies {
 
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     include(implementation("com.github.Vatuu:discord-rpc:1.6.2"))
+    include(implementation("de.labystudio.spotify-api:spotify-api:1.0.4"))
 }
 
 processResources {
