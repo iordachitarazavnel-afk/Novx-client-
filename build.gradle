@@ -34,7 +34,7 @@ dependencies {
 
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     include(implementation("com.github.Vatuu:discord-rpc:1.6.2"))
-    include(implementation("com.github.LabyStudio:spotify-api:1.0.4"))
+    include(implementation("com.github.LabyStudio:java-spotify-api:1.0.4"))
 }
 
 processResources {
