@@ -11,7 +11,7 @@ import foure.dev.module.setting.impl.BooleanSetting;
 import foure.dev.module.setting.impl.NumberSetting;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.Axis;
-import net.minecraft.client.gl.ShaderProgramKeys;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.render.*;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
@@ -34,7 +34,6 @@ import java.util.concurrent.ConcurrentHashMap;
 )
 public class BaseRadar extends Function {
 
-    // Detection
     private final NumberSetting  minScore           = new NumberSetting("Min Score",             this, 5,   1,   50,  1);
     private final BooleanSetting detectWorkstations = new BooleanSetting("Workstations",         true);
     private final BooleanSetting detectStorage      = new BooleanSetting("Storage",              true);
@@ -46,9 +45,8 @@ public class BaseRadar extends Function {
     private final BooleanSetting rotatedDeepslate   = new BooleanSetting("Rotated Deepslate",    true);
     private final BooleanSetting airAnomalies       = new BooleanSetting("Unnatural Air",        true);
     private final NumberSetting  scanRadius         = new NumberSetting("Scan Radius (chunks)",  this, 12,  4,   32,  1);
-    // Render
     private final NumberSetting  renderHeight       = new NumberSetting("Render Height",         this, 64, -64, 320,  1);
-    private final BooleanSetting showScore          = new BooleanSetting("Chat Notify",          true);
+    private final BooleanSetting chatNotify         = new BooleanSetting("Chat Notify",          true);
 
     private final Map<ChunkPos, Integer> scores         = new ConcurrentHashMap<>();
     private final Set<ChunkPos>          flagged         = ConcurrentHashMap.newKeySet();
@@ -59,7 +57,7 @@ public class BaseRadar extends Function {
             minScore, detectWorkstations, detectStorage, detectFarming,
             detectLighting, detectPaths, detectNetherBlocks,
             lightAnomalies, rotatedDeepslate, airAnomalies,
-            scanRadius, renderHeight, showScore
+            scanRadius, renderHeight, chatNotify
         });
     }
 
@@ -79,9 +77,6 @@ public class BaseRadar extends Function {
         alreadyNotified.clear();
     }
 
-    /**
-     * Apelat din mixin-ul de ChunkData.
-     */
     public void onChunkLoaded(WorldChunk chunk) {
         if (mc.world == null) return;
         ChunkPos pos = chunk.getPos();
@@ -89,7 +84,7 @@ public class BaseRadar extends Function {
         scores.put(pos, score);
         if (score >= minScore.getValueInt()) {
             flagged.add(pos);
-            if ((Boolean) showScore.getValue() && alreadyNotified.add(pos))
+            if ((Boolean) chatNotify.getValue() && alreadyNotified.add(pos))
                 sendMessage("Baza posibila la chunk " + pos.x + ", " + pos.z + " (score: " + score + ")");
         } else {
             flagged.remove(pos);
@@ -107,11 +102,6 @@ public class BaseRadar extends Function {
         double camZ = event.getCamera().getPos().z;
         Matrix4f matrix = event.getMatrix();
 
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.disableDepthTest();
-        RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR);
-
         Tessellator tess = Tessellator.getInstance();
         BufferBuilder buf = tess.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
 
@@ -121,11 +111,11 @@ public class BaseRadar extends Function {
             int score = scores.getOrDefault(pos, 0);
             double ratio = Math.min(1.0, (double)(score - minScore.getValueInt()) / (double) Math.max(1, minScore.getValueInt() * 4));
 
-            // lerp low (255,255,0) -> high (255,30,30)
+            // galben -> rosu
             int r = 255;
             int g = (int)(255 + ratio * (30 - 255));
-            int b = (int)(0   + ratio * (30 - 0));
-            int a = (int)(80  + ratio * (140 - 80));
+            int b = 0;
+            int a = (int)(80 + ratio * (140 - 80));
 
             double x1 = pos.getStartX() - camX;
             double z1 = pos.getStartZ() - camZ;
@@ -133,17 +123,18 @@ public class BaseRadar extends Function {
             double z2 = z1 + 16;
             double y  = renderHeight.getValueFloat() - camY;
 
-            // filled side (alpha from settings)
-            drawBoxFill(buf, matrix, x1, y - 0.5, z1, x2, y + 0.5, z2, r, g, b, a);
-            // solid outline
-            drawBoxEdges(buf, matrix, x1, y - 0.5, z1, x2, y + 0.5, z2, r, g, b, 255);
+            drawBoxEdges(buf, matrix, x1, y - 0.5, z1, x2, y + 0.5, z2, r, g, b, a);
         }
 
         BuiltBuffer built = buf.endNullable();
-        if (built != null) BufferRenderer.drawWithGlobalProgram(built);
-
-        RenderSystem.enableDepthTest();
-        RenderSystem.disableBlend();
+        if (built != null) {
+            RenderSystem.disableDepthTest();
+            RenderSystem.enableBlend();
+            RenderSystem.defaultBlendFunc();
+            BufferRenderer.draw(built, RenderPipelines.LINES);
+            RenderSystem.enableDepthTest();
+            RenderSystem.disableBlend();
+        }
     }
 
     // ─── scoring ─────────────────────────────────────────────────────────────
@@ -152,9 +143,7 @@ public class BaseRadar extends Function {
         int score = 0;
         ChunkSection[] sections = chunk.getSectionArray();
         ChunkPos cp = chunk.getPos();
-        int lightAnomaliesFound = 0;
-        int rotatedFound = 0;
-        int airPockets = 0;
+        int lightAnomaliesFound = 0, rotatedFound = 0, airPockets = 0;
 
         for (int i = 0; i < sections.length; i++) {
             ChunkSection sec = sections[i];
@@ -166,15 +155,15 @@ public class BaseRadar extends Function {
                     for (int y = 0; y < 16; y++) {
                         BlockPos pos = new BlockPos(cp.getStartX() + x, sy + y, cp.getStartZ() + z);
                         BlockState state = sec.getBlockState(x, y, z);
-                        Block b = state.getBlock();
-                        score += scoreBlock(b);
+                        Block blk = state.getBlock();
+                        score += scoreBlock(blk);
 
                         if (sy + y < 0) {
                             if ((Boolean) lightAnomalies.getValue() && isLightAnomalous(pos, state))
                                 lightAnomaliesFound++;
                             if ((Boolean) rotatedDeepslate.getValue() && isRotatedDeepslate(state))
                                 rotatedFound++;
-                            if ((Boolean) airAnomalies.getValue() && b == Blocks.AIR && isUnnaturalAir(pos))
+                            if ((Boolean) airAnomalies.getValue() && blk == Blocks.AIR && isUnnaturalAir(pos))
                                 airPockets++;
                         }
                     }
@@ -194,7 +183,6 @@ public class BaseRadar extends Function {
         if (mc.world.getLightLevel(LightType.BLOCK, pos) < 8) return false;
         for (Direction dir : Direction.values()) {
             BlockState n = mc.world.getBlockState(pos.offset(dir));
-            // ignora lava, glow lichen, magma
             if (n.isOf(Blocks.LAVA) || n.isOf(Blocks.GLOW_LICHEN) || n.isOf(Blocks.MAGMA_BLOCK))
                 return false;
         }
@@ -207,17 +195,15 @@ public class BaseRadar extends Function {
                       || state.isOf(Blocks.POLISHED_DEEPSLATE);
         if (!isType) return false;
         if (!state.contains(Properties.AXIS)) return false;
-        // deepslate nativ = Y axis; orice alt axis = plasat de jucator
         return state.get(Properties.AXIS) != Axis.Y;
     }
 
     private boolean isUnnaturalAir(BlockPos pos) {
-        int solidNeighbors = 0;
-        for (Direction dir : Direction.values()) {
+        int solid = 0;
+        for (Direction dir : Direction.values())
             if (mc.world.getBlockState(pos.offset(dir)).isSolidBlock(mc.world, pos.offset(dir)))
-                solidNeighbors++;
-        }
-        return solidNeighbors >= 5;
+                solid++;
+        return solid >= 5;
     }
 
     private int scoreBlock(Block b) {
@@ -263,29 +249,6 @@ public class BaseRadar extends Function {
     }
 
     // ─── render util ─────────────────────────────────────────────────────────
-
-    private static void drawBoxFill(BufferBuilder buf, Matrix4f mat,
-                                    double x1, double y1, double z1,
-                                    double x2, double y2, double z2,
-                                    int r, int g, int b, int a) {
-        float ax = (float)x1, bx = (float)x2;
-        float ay = (float)y1, by = (float)y2;
-        float az = (float)z1, bz = (float)z2;
-        // 6 faces, 2 triangles each via QUADS emulated with DEBUG_LINES is wrong;
-        // for fill we switch to TRIANGLES — but since we share one BufferBuilder we can't mix modes.
-        // So we draw fill as a very dense line grid (visually same as fill for thin slabs).
-        // Alternatively, just skip fill and rely on outline only.
-        // Best practice: use two separate draw calls for fill vs lines.
-        // Here we draw the fill faces as triangles in a separate pass (called before outline).
-        buf.vertex(mat, ax, ay, az).color(r, g, b, a);
-        buf.vertex(mat, bx, ay, az).color(r, g, b, a);
-        buf.vertex(mat, bx, ay, bz).color(r, g, b, a);
-        buf.vertex(mat, ax, ay, bz).color(r, g, b, a);
-        buf.vertex(mat, ax, by, az).color(r, g, b, a);
-        buf.vertex(mat, bx, by, az).color(r, g, b, a);
-        buf.vertex(mat, bx, by, bz).color(r, g, b, a);
-        buf.vertex(mat, ax, by, bz).color(r, g, b, a);
-    }
 
     private static void drawBoxEdges(BufferBuilder buf, Matrix4f mat,
                                      double x1, double y1, double z1,
