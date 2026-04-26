@@ -10,7 +10,7 @@ import foure.dev.module.setting.api.Setting;
 import foure.dev.module.setting.impl.BooleanSetting;
 import foure.dev.module.setting.impl.NumberSetting;
 import net.minecraft.block.*;
-import net.minecraft.block.enums.Axis;
+import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.render.*;
 import net.minecraft.state.property.Properties;
