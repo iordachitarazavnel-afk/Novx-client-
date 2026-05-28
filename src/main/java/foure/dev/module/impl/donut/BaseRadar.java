@@ -1,7 +1,6 @@
 package foure.dev.module.impl.donut;
 
 import com.google.common.eventbus.Subscribe;
-import com.mojang.blaze3d.systems.RenderSystem;
 import foure.dev.event.impl.render.Render3DEvent;
 import foure.dev.module.api.Category;
 import foure.dev.module.api.Function;
@@ -97,13 +96,13 @@ public class BaseRadar extends Function {
 
         int radius = scanRadius.getValueInt();
         ChunkPos playerChunk = mc.player.getChunkPos();
-        double camX = event.getCamera().getPos().x;
-        double camY = event.getCamera().getPos().y;
-        double camZ = event.getCamera().getPos().z;
+        double camX = event.getCamera().getCameraPos().x;
+        double camY = event.getCamera().getCameraPos().y;
+        double camZ = event.getCamera().getCameraPos().z;
         Matrix4f matrix = event.getMatrix();
 
         Tessellator tess = Tessellator.getInstance();
-        BufferBuilder buf = tess.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
+        BufferBuilder buf = tess.begin(VertexFormat.DrawMode.LINES, VertexFormats.POSITION_COLOR);
 
         for (ChunkPos pos : flagged) {
             if (Math.abs(pos.x - playerChunk.x) > radius || Math.abs(pos.z - playerChunk.z) > radius) continue;
@@ -128,12 +127,7 @@ public class BaseRadar extends Function {
 
         BuiltBuffer built = buf.endNullable();
         if (built != null) {
-            RenderSystem.disableDepthTest();
-            RenderSystem.enableBlend();
-            RenderSystem.defaultBlendFunc();
-            BufferRenderer.draw(built, RenderPipelines.LINES);
-            RenderSystem.enableDepthTest();
-            RenderSystem.disableBlend();
+            net.minecraft.client.render.BufferRenderer.draw(built, RenderPipelines.LINES);
         }
     }
 
