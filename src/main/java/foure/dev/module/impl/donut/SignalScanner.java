@@ -1,7 +1,6 @@
 package foure.dev.module.impl.donut;
 
 import com.google.common.eventbus.Subscribe;
-import com.mojang.blaze3d.systems.RenderSystem;
 import foure.dev.event.impl.game.EventUpdate;
 import foure.dev.event.impl.render.Render3DEvent;
 import foure.dev.module.api.Category;
@@ -248,20 +247,16 @@ public class SignalScanner extends Function {
         Map<ChunkPos, Signal> current = signals;
         if (current.isEmpty()) return;
 
-        double camX = event.getCamera().getPos().x;
-        double camY = event.getCamera().getPos().y;
-        double camZ = event.getCamera().getPos().z;
+        double camX = event.getCamera().getCameraPos().x;
+        double camY = event.getCamera().getCameraPos().y;
+        double camZ = event.getCamera().getCameraPos().z;
         Matrix4f matrix = event.getMatrix();
         int worldBottom = mc.world.getBottomY();
         int worldTop    = worldBottom + mc.world.getHeight();
 
-        RenderSystem.disableDepthTest();
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-
         // ── signal boxes ──
         if ((Boolean) renderSignals.getValue()) {
-            BufferBuilder buf = Tessellator.getInstance().begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
+            BufferBuilder buf = Tessellator.getInstance().begin(VertexFormat.DrawMode.LINES, VertexFormats.POSITION_COLOR);
             boolean full = (Boolean) fullHeight.getValue();
             double pad = yPadding.getValueFloat();
             for (Signal s : current.values()) {
@@ -272,7 +267,7 @@ public class SignalScanner extends Function {
                 drawBoxEdges(buf, matrix, x1, y1, z1, x2, y2, z2, 255, 50, 50, 220);
             }
             BuiltBuffer built = buf.endNullable();
-            if (built != null) BufferRenderer.draw(built, RenderPipelines.LINES);
+            if (built != null) net.minecraft.client.render.BufferRenderer.draw(built, RenderPipelines.LINES);
         }
 
         // ── high entity chunk ──
@@ -295,13 +290,13 @@ public class SignalScanner extends Function {
                 if (best != null) uniqueHighChunks.add(best);
             }
 
-            BufferBuilder buf2 = Tessellator.getInstance().begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
+            BufferBuilder buf2 = Tessellator.getInstance().begin(VertexFormat.DrawMode.LINES, VertexFormats.POSITION_COLOR);
             for (ChunkPos cp : uniqueHighChunks) {
                 double x1 = (cp.x << 4) - camX, z1 = (cp.z << 4) - camZ;
                 drawBoxEdges(buf2, matrix, x1, ey, z1, x1 + 16, ey + 0.1, z1 + 16, 120, 0, 255, 200);
             }
             BuiltBuffer built2 = buf2.endNullable();
-            if (built2 != null) BufferRenderer.draw(built2, RenderPipelines.LINES);
+            if (built2 != null) net.minecraft.client.render.BufferRenderer.draw(built2, RenderPipelines.LINES);
         }
 
         // ── search area ──
@@ -317,17 +312,14 @@ public class SignalScanner extends Function {
                             searchChunks.add(cp);
                     }
 
-            BufferBuilder buf3 = Tessellator.getInstance().begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
+            BufferBuilder buf3 = Tessellator.getInstance().begin(VertexFormat.DrawMode.LINES, VertexFormats.POSITION_COLOR);
             for (ChunkPos cp : searchChunks) {
                 double x1 = (cp.x << 4) - camX, z1 = (cp.z << 4) - camZ;
                 drawBoxEdges(buf3, matrix, x1, worldBottom - camY, z1, x1 + 16, worldTop - camY, z1 + 16, 200, 200, 200, 60);
             }
             BuiltBuffer built3 = buf3.endNullable();
-            if (built3 != null) BufferRenderer.draw(built3, RenderPipelines.LINES);
+            if (built3 != null) net.minecraft.client.render.BufferRenderer.draw(built3, RenderPipelines.LINES);
         }
-
-        RenderSystem.enableDepthTest();
-        RenderSystem.disableBlend();
     }
 
     // ─── helpers ─────────────────────────────────────────────────────────────
