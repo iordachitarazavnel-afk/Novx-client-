@@ -388,4 +388,4 @@ public class SignalScanner extends Function {
             this.chunkDist = chunkDist; this.blockCounts = blockCounts;
         }
     }
-}
+            }
