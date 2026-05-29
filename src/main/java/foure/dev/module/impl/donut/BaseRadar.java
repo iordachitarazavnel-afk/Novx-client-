@@ -104,7 +104,7 @@ public class BaseRadar extends Function {
         Matrix4f matrix = event.getMatrix();
 
         VertexConsumerProvider.Immediate immediate = mc.getBufferBuilders().getEntityVertexConsumers();
-        VertexConsumer lines = immediate.getBuffer(RenderLayer.getLines());
+        VertexConsumer lines = immediate.getBuffer(RenderLayer.LINES);
 
         for (ChunkPos pos : flagged) {
             if (Math.abs(pos.x - playerChunk.x) > radius || Math.abs(pos.z - playerChunk.z) > radius) continue;
@@ -126,7 +126,7 @@ public class BaseRadar extends Function {
             drawBoxEdges(lines, matrix, x1, y - 0.5, z1, x2, y + 0.5, z2, r, g, b, a);
         }
 
-        immediate.draw(RenderLayer.getLines());
+        immediate.draw(RenderLayer.LINES);
     }
 
     // ─── scoring ─────────────────────────────────────────────────────────────
@@ -263,7 +263,7 @@ public class BaseRadar extends Function {
         ln(vc, mat, ax, ay, bz, ax, by, bz, r, g, b, a);
     }
 
-    // RenderLayer.getLines() foloseste formatul LINES care are nevoie de .normal()
+    // RenderLayer.LINES foloseste formatul LINES care are nevoie de .normal()
     private static void ln(VertexConsumer vc, Matrix4f mat,
                             float x1, float y1, float z1,
                             float x2, float y2, float z2,
