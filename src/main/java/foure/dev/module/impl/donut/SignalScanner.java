@@ -11,9 +11,8 @@ import foure.dev.module.setting.impl.BooleanSetting;
 import foure.dev.module.setting.impl.NumberSetting;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.gl.RenderPipelines;
+import net.minecraft.client.render.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.registry.Registries;
 import net.minecraft.sound.SoundCategory;
@@ -33,7 +32,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @ModuleInfo(
     name = "SignalScanner",
     category = Category.DONUT,
-    desc = "Detectează semnale anomale în chunk-uri depărtate pentru a găsi baze."
+    desc = "Detectează semnale anomale în chunk-uri depărtate pentru a găsi baze. Suportă auto-discover, high-entity highlight și search area."
 )
 public class SignalScanner extends Function {
 
@@ -255,11 +254,9 @@ public class SignalScanner extends Function {
         int worldBottom = mc.world.getBottomY();
         int worldTop    = worldBottom + mc.world.getHeight();
 
-        VertexConsumerProvider.Immediate immediate = mc.getBufferBuilders().getEntityVertexConsumers();
-
         // ── signal boxes ──
         if ((Boolean) renderSignals.getValue()) {
-            VertexConsumer lines = immediate.getBuffer(RenderLayer.getLines());
+            BufferBuilder buf = Tessellator.getInstance().begin(VertexFormat.DrawMode.LINES, VertexFormats.POSITION_COLOR);
             boolean full = (Boolean) fullHeight.getValue();
             double pad = yPadding.getValueFloat();
             for (Signal s : current.values()) {
@@ -267,9 +264,10 @@ public class SignalScanner extends Function {
                 double x2 = x1 + 16, z2 = z1 + 16;
                 double y1 = (full ? worldBottom : s.minY - pad) - camY;
                 double y2 = (full ? worldTop    : s.maxY + 1 + pad) - camY;
-                drawBoxEdges(lines, matrix, x1, y1, z1, x2, y2, z2, 255, 50, 50, 220);
+                drawBoxEdges(buf, matrix, x1, y1, z1, x2, y2, z2, 255, 50, 50, 220);
             }
-            immediate.draw(RenderLayer.getLines());
+            BuiltBuffer built = buf.endNullable();
+            if (built != null) net.minecraft.client.render.BufferRenderer.draw(built, RenderPipelines.LINES);
         }
 
         // ── high entity chunk ──
@@ -292,17 +290,19 @@ public class SignalScanner extends Function {
                 if (best != null) uniqueHighChunks.add(best);
             }
 
-            VertexConsumer lines2 = immediate.getBuffer(RenderLayer.getLines());
+            BufferBuilder buf2 = Tessellator.getInstance().begin(VertexFormat.DrawMode.LINES, VertexFormats.POSITION_COLOR);
             for (ChunkPos cp : uniqueHighChunks) {
                 double x1 = (cp.x << 4) - camX, z1 = (cp.z << 4) - camZ;
-                drawBoxEdges(lines2, matrix, x1, ey, z1, x1 + 16, ey + 0.1, z1 + 16, 120, 0, 255, 200);
+                drawBoxEdges(buf2, matrix, x1, ey, z1, x1 + 16, ey + 0.1, z1 + 16, 120, 0, 255, 200);
             }
-            immediate.draw(RenderLayer.getLines());
+            BuiltBuffer built2 = buf2.endNullable();
+            if (built2 != null) net.minecraft.client.render.BufferRenderer.draw(built2, RenderPipelines.LINES);
         }
 
         // ── search area ──
         if ((Boolean) renderSearchArea.getValue()) {
             int eRadius = highEntityRadius.getValueInt();
+            double ey = highEntityY.getValueFloat() - camY;
             Set<ChunkPos> searchChunks = new HashSet<>();
             for (Signal s : current.values())
                 for (int cx = -eRadius; cx <= eRadius; cx++)
@@ -312,12 +312,13 @@ public class SignalScanner extends Function {
                             searchChunks.add(cp);
                     }
 
-            VertexConsumer lines3 = immediate.getBuffer(RenderLayer.getLines());
+            BufferBuilder buf3 = Tessellator.getInstance().begin(VertexFormat.DrawMode.LINES, VertexFormats.POSITION_COLOR);
             for (ChunkPos cp : searchChunks) {
                 double x1 = (cp.x << 4) - camX, z1 = (cp.z << 4) - camZ;
-                drawBoxEdges(lines3, matrix, x1, worldBottom - camY, z1, x1 + 16, worldTop - camY, z1 + 16, 200, 200, 200, 60);
+                drawBoxEdges(buf3, matrix, x1, worldBottom - camY, z1, x1 + 16, worldTop - camY, z1 + 16, 200, 200, 200, 60);
             }
-            immediate.draw(RenderLayer.getLines());
+            BuiltBuffer built3 = buf3.endNullable();
+            if (built3 != null) net.minecraft.client.render.BufferRenderer.draw(built3, RenderPipelines.LINES);
         }
     }
 
@@ -344,33 +345,33 @@ public class SignalScanner extends Function {
 
     // ─── render util ─────────────────────────────────────────────────────────
 
-    private static void drawBoxEdges(VertexConsumer vc, Matrix4f mat,
+    private static void drawBoxEdges(BufferBuilder buf, Matrix4f mat,
                                      double x1, double y1, double z1,
                                      double x2, double y2, double z2,
                                      int r, int g, int b, int a) {
         float ax = (float)x1, bx = (float)x2;
         float ay = (float)y1, by = (float)y2;
         float az = (float)z1, bz = (float)z2;
-        ln(vc, mat, ax, ay, az, bx, ay, az, r, g, b, a);
-        ln(vc, mat, bx, ay, az, bx, ay, bz, r, g, b, a);
-        ln(vc, mat, bx, ay, bz, ax, ay, bz, r, g, b, a);
-        ln(vc, mat, ax, ay, bz, ax, ay, az, r, g, b, a);
-        ln(vc, mat, ax, by, az, bx, by, az, r, g, b, a);
-        ln(vc, mat, bx, by, az, bx, by, bz, r, g, b, a);
-        ln(vc, mat, bx, by, bz, ax, by, bz, r, g, b, a);
-        ln(vc, mat, ax, by, bz, ax, by, az, r, g, b, a);
-        ln(vc, mat, ax, ay, az, ax, by, az, r, g, b, a);
-        ln(vc, mat, bx, ay, az, bx, by, az, r, g, b, a);
-        ln(vc, mat, bx, ay, bz, bx, by, bz, r, g, b, a);
-        ln(vc, mat, ax, ay, bz, ax, by, bz, r, g, b, a);
+        ln(buf, mat, ax, ay, az, bx, ay, az, r, g, b, a);
+        ln(buf, mat, bx, ay, az, bx, ay, bz, r, g, b, a);
+        ln(buf, mat, bx, ay, bz, ax, ay, bz, r, g, b, a);
+        ln(buf, mat, ax, ay, bz, ax, ay, az, r, g, b, a);
+        ln(buf, mat, ax, by, az, bx, by, az, r, g, b, a);
+        ln(buf, mat, bx, by, az, bx, by, bz, r, g, b, a);
+        ln(buf, mat, bx, by, bz, ax, by, bz, r, g, b, a);
+        ln(buf, mat, ax, by, bz, ax, by, az, r, g, b, a);
+        ln(buf, mat, ax, ay, az, ax, by, az, r, g, b, a);
+        ln(buf, mat, bx, ay, az, bx, by, az, r, g, b, a);
+        ln(buf, mat, bx, ay, bz, bx, by, bz, r, g, b, a);
+        ln(buf, mat, ax, ay, bz, ax, by, bz, r, g, b, a);
     }
 
-    private static void ln(VertexConsumer vc, Matrix4f mat,
+    private static void ln(BufferBuilder buf, Matrix4f mat,
                             float x1, float y1, float z1,
                             float x2, float y2, float z2,
                             int r, int g, int b, int a) {
-        vc.vertex(mat, x1, y1, z1).color(r, g, b, a).normal(0f, 1f, 0f);
-        vc.vertex(mat, x2, y2, z2).color(r, g, b, a).normal(0f, 1f, 0f);
+        buf.vertex(mat, x1, y1, z1).color(r, g, b, a);
+        buf.vertex(mat, x2, y2, z2).color(r, g, b, a);
     }
 
     private void sendMessage(String msg) {
@@ -387,4 +388,4 @@ public class SignalScanner extends Function {
             this.chunkDist = chunkDist; this.blockCounts = blockCounts;
         }
     }
-}
+           }
